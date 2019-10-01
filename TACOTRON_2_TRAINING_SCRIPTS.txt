@@ -14,7 +14,7 @@ python preprocess_audio2mel.py --wav-files filelists/ljs_audio_text_test_filelis
 
 python train.py -m Tacotron2 -o ./LJSpeech-1.1/ -lr 1e-4 --epochs 1501 -bs 32 --weight-decay 1e-6 --grad-clip-thresh 1.0 --cudnn-enabled --log-file ./output/nvlog.json --anneal-steps 500 1000 1500 --anneal-factor 0.1 --amp-run --training-files filelists/ljs_audio_text_train_filelist.txt --validation-files filelists/ljs_audio_text_test_filelist.txt --sampling-rate 22050
 
-python train.py -m WaveGlow -o ./LJSpeech-1.1/ -lr 1e-4 --epochs 1500 -bs 32 --segment-length 4000 --weight-decay 0 --grad-clip-thresh 65504.0 --cudnn-enabled --log-file nvlog.json --training-files filelists/ljs_audio_text_train_filelist.txt --validation-files filelists/ljs_audio_text_test_filelist.txt --dataset-path ./ --amp-run --sampling-rate 22050 --epochs-per-checkpoint 1 --flows 6
+python train.py -m WaveGlow -o ./LJSpeech-1.1/ -lr 1e-4 --epochs 1500 -bs 16 --segment-length 4000 --weight-decay 0 --grad-clip-thresh 65504.0 --cudnn-enabled --log-file nvlog.json --training-files filelists/ljs_audio_text_train_filelist.txt --validation-files filelists/ljs_audio_text_test_filelist.txt --dataset-path ./ --amp-run --sampling-rate 22050 --epochs-per-checkpoint 1 --flows 6
 
 # Infer
 python inference.py --input output/text.txt \
