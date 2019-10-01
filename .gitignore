@@ -1,0 +1,12 @@
+*.tar
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.tiff
+*.pth
+*.pyc
+*.wav
+*.pt
+/data/*
+/__pycache__/*
