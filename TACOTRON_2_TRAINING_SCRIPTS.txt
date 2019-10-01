@@ -1,10 +1,10 @@
 # Charmaine dataset
 python preprocess_audio2mel.py --wav-files filelists/train.txt --mel-files filelists/mels.txt --sampling-rate 16000
 
-python train.py -m Tacotron2 -o ./Charmaine/ -lr 1e-4 --epochs 1501 -bs 32 --weight-decay 1e-6 --grad-clip-thresh 1.0 --cudnn-enabled --log-file ./output/nvlog.json --anneal-steps 500 1000 1500 --anneal-factor 0.1 --amp-run --epochs-per-checkpoint 1 
---training-files filelists/train.txt --validation-files filelists/train.txt --sampling-rate 16000
+python train.py -m Tacotron2 -o ./Charmaine/ -lr 1e-4 --epochs 1501 -bs 32 --weight-decay 1e-6 --grad-clip-thresh 1.0 --cudnn-enabled --log-file ./output/nvlog.json --anneal-steps 500 1000 1500 --anneal-factor 0.1 --amp-run --epochs-per-checkpoint 1 \
+--training-files filelists/train.txt --validation-files filelists/train.txt --sampling-rate 16000 --checkpoint Charmaine/checkpoint_Tacotron2_0
 
-python train.py -m WaveGlow -o ./Charmaine/ -lr 1e-4 --epochs 1500 -bs 16 --segment-length 4000 --weight-decay 0 --grad-clip-thresh 65504.0 --cudnn-enabled --log-file nvlog.json --training-files filelists/train.txt --validation-files filelists/train.txt --dataset-path ./ --amp-run --sampling-rate 16000 --epochs-per-checkpoint 1 --flows 6
+python train.py -m WaveGlow -o ./Charmaine/ -lr 1e-4 --epochs 1500 -bs 16 --segment-length 4000 --weight-decay 0 --grad-clip-thresh 65504.0 --cudnn-enabled --log-file nvlog.json --training-files filelists/train.txt --validation-files filelists/train.txt --dataset-path ./ --amp-run --sampling-rate 16000 --epochs-per-checkpoint 1 --flows 6 --checkpoint Charmaine/checkpoint_WaveGlow_0
 
 
 #Ljs dataset
@@ -14,7 +14,12 @@ python preprocess_audio2mel.py --wav-files filelists/ljs_audio_text_test_filelis
 
 python train.py -m Tacotron2 -o ./LJSpeech-1.1/ -lr 1e-4 --epochs 1501 -bs 32 --weight-decay 1e-6 --grad-clip-thresh 1.0 --cudnn-enabled --log-file ./output/nvlog.json --anneal-steps 500 1000 1500 --anneal-factor 0.1 --amp-run --training-files filelists/ljs_audio_text_train_filelist.txt --validation-files filelists/ljs_audio_text_test_filelist.txt --sampling-rate 22050
 
-python train.py -m WaveGlow -o ./LJSpeech-1.1/ -lr 1e-4 --epochs 1500 -bs 16 --segment-length 4000 --weight-decay 0 --grad-clip-thresh 65504.0 --cudnn-enabled --log-file nvlog.json --training-files filelists/ljs_audio_text_train_filelist.txt --validation-files filelists/ljs_audio_text_test_filelist.txt --dataset-path ./ --amp-run --sampling-rate 22050 --epochs-per-checkpoint 1 --flows 6
+python train.py -m WaveGlow -o ./LJSpeech-1.1/ -lr 1e-4 --epochs 1500 -bs 16 --segment-length 4000 --weight-decay 0 --grad-clip-thresh 65504.0 --cudnn-enabled --log-file nvlog.json --training-files filelists/ljs_audio_text_train_filelist.txt --validation-files filelists/ljs_audio_text_test_filelist.txt --dataset-path ./ --amp-run --sampling-rate 22050 --epochs-per-checkpoint 1 --flows 6 --checkpoint LJSpeech-1.1/checkpoint_WaveGlow_1
+
+--checkpoint Charmaine/checkpoint_Tacotron2_0
+--checkpoint Charmaine/checkpoint_WaveGlow_0
+--checkpoint LJSpeech-1.1/checkpoint_Tacotron2_6
+--checkpoint LJSpeech-1.1/checkpoint_WaveGlow_1
 
 # Infer
 python inference.py --input output/text.txt \
@@ -23,5 +28,14 @@ python inference.py --input output/text.txt \
 		--waveglow Charmaine/checkpoint_WaveGlow_0  \
 		--flows 6 \
 		--sampling-rate 16000 \
+		--amp-run \
+		--stft-hop-length 256
+
+python inference.py --input output/text.txt \
+		--output output/ \
+		--tacotron2 LJSpeech-1.1/checkpoint_Tacotron2_6 \
+		--waveglow LJSpeech-1.1/checkpoint_WaveGlow_1  \
+		--flows 6 \
+		--sampling-rate 22050 \
 		--amp-run \
 		--stft-hop-length 256
