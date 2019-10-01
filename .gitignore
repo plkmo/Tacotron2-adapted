@@ -9,4 +9,6 @@
 *.wav
 *.pt
 /data/*
+/Charmaine/*
+/LJSpeech-1.1/*
 /__pycache__/*
